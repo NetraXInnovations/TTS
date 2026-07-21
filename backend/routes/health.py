@@ -8,7 +8,7 @@ from pathlib import Path
 import torch
 from fastapi import APIRouter
 
-from .. import config, models
+from .. import config
 from ..services import tts
 from ..utils.platform_detect import get_backend_type, is_amd_gpu_windows
 
@@ -167,22 +167,22 @@ async def health():
     elif has_xpu:
         default_variant = "xpu"
 
-    return models.HealthResponse(
-        status="healthy",
-        model_loaded=model_loaded,
-        model_downloaded=model_downloaded,
-        model_size=model_size,
-        gpu_available=gpu_available,
-        gpu_type=gpu_type,
-        vram_used_mb=vram_used,
-        backend_type=backend_type,
-        backend_variant=os.environ.get("VOICEBOX_BACKEND_VARIANT", default_variant),
-        supports_rocm=is_amd_gpu_windows(),
-        gpu_compatibility_warning=gpu_compat_warning,
-    )
+    return {
+        "status": "healthy",
+        "model_loaded": model_loaded,
+        "model_downloaded": model_downloaded,
+        "model_size": model_size,
+        "gpu_available": gpu_available,
+        "gpu_type": gpu_type,
+        "vram_used_mb": vram_used,
+        "backend_type": backend_type,
+        "backend_variant": os.environ.get("VOICEBOX_BACKEND_VARIANT", default_variant),
+        "supports_rocm": is_amd_gpu_windows(),
+        "gpu_compatibility_warning": gpu_compat_warning,
+    }
 
 
-@router.get("/health/filesystem", response_model=models.FilesystemHealthResponse)
+@router.get("/health/filesystem")
 async def filesystem_health():
     """Check filesystem health: directory existence, write permissions, and disk space."""
     import shutil
@@ -194,7 +194,7 @@ async def filesystem_health():
         "data": config.get_data_dir(),
     }
 
-    checks: list[models.DirectoryCheck] = []
+    checks = []
     all_ok = True
 
     for _label, dir_path in dirs_to_check.items():
@@ -222,14 +222,12 @@ async def filesystem_health():
         if not exists or not writable:
             all_ok = False
 
-        checks.append(
-            models.DirectoryCheck(
-                path=str(dir_path.resolve()),
-                exists=exists,
-                writable=writable,
-                error=error,
-            )
-        )
+        checks.append({
+            "path": str(dir_path.resolve()),
+            "exists": exists,
+            "writable": writable,
+            "error": error,
+        })
 
     disk_free_mb = None
     disk_total_mb = None
@@ -242,9 +240,9 @@ async def filesystem_health():
     except OSError:
         all_ok = False
 
-    return models.FilesystemHealthResponse(
-        healthy=all_ok,
-        disk_free_mb=disk_free_mb,
-        disk_total_mb=disk_total_mb,
-        directories=checks,
-    )
+    return {
+        "healthy": all_ok,
+        "disk_free_mb": disk_free_mb,
+        "disk_total_mb": disk_total_mb,
+        "directories": checks,
+    }
