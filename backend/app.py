@@ -185,12 +185,15 @@ def _configure_cors(application: FastAPI) -> None:
         "https://tauri.localhost",  # Tauri webview (Windows/Linux)
         "http://tauri.localhost",  # Tauri webview (Windows, some builds)
     ]
-    env_origins = os.environ.get("VOICEBOX_CORS_ORIGINS", "")
-    all_origins = default_origins + [o.strip() for o in env_origins.split(",") if o.strip()]
+    env_origins = os.environ.get("VOICEBOX_CORS_ORIGINS", "*")
+    if env_origins == "*":
+        allow_origins = ["*"]
+    else:
+        allow_origins = default_origins + [o.strip() for o in env_origins.split(",") if o.strip()]
 
     application.add_middleware(
         CORSMiddleware,
-        allow_origins=all_origins,
+        allow_origins=allow_origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
