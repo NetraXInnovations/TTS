@@ -102,6 +102,7 @@ if not os.environ.get("HSA_OVERRIDE_GFX_VERSION"):
 if not os.environ.get("MIOPEN_LOG_LEVEL"):
     os.environ["MIOPEN_LOG_LEVEL"] = "4"
 
+# pyrefly: ignore [missing-import]
 import torch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -260,6 +261,7 @@ def _get_gpu_status() -> str:
 
     # Intel XPU (Arc / Data Center) via IPEX
     try:
+        # pyrefly: ignore [missing-import]
         import intel_extension_for_pytorch  # noqa: F401
 
         if hasattr(torch, "xpu") and torch.xpu.is_available():
@@ -298,6 +300,7 @@ async def _run_startup(application: FastAPI) -> None:
     init_queue()
 
     # Mark stale "generating" records as failed -- leftovers from a killed process
+    # pyrefly: ignore [missing-import]
     from sqlalchemy import text as sa_text
 
     db = next(get_db())
@@ -348,6 +351,7 @@ async def _run_startup(application: FastAPI) -> None:
         logger.warning("Could not initialize progress manager event loop: %s", e)
 
     try:
+        # pyrefly: ignore [missing-import]
         from huggingface_hub import constants as hf_constants
 
         cache_dir = Path(hf_constants.HF_HUB_CACHE)
