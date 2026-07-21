@@ -191,8 +191,8 @@ def _configure_cors(application: FastAPI) -> None:
     if env_origins == "*":
         application.add_middleware(
             CORSMiddleware,
-            allow_origins=["*", "null"],
-            allow_credentials=False,
+            allow_origin_regex=".*",
+            allow_credentials=True,
             allow_methods=["*"],
             allow_headers=["*"],
         )
