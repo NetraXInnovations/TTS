@@ -191,8 +191,8 @@ def _configure_cors(application: FastAPI) -> None:
     if env_origins == "*":
         application.add_middleware(
             CORSMiddleware,
-            allow_origin_regex=".*",  # This safely allows literally everything, including "null"
-            allow_credentials=True,
+            allow_origins=["*", "null"],
+            allow_credentials=False,
             allow_methods=["*"],
             allow_headers=["*"],
         )
