@@ -6,13 +6,10 @@ import signal
 from pathlib import Path
 
 import torch
-from fastapi import APIRouter, Depends
-from fastapi.responses import FileResponse
-from sqlalchemy.orm import Session
+from fastapi import APIRouter
 
 from .. import config, models
 from ..services import tts
-from ..database import get_db
 from ..utils.platform_detect import get_backend_type, is_amd_gpu_windows
 
 router = APIRouter()
@@ -47,7 +44,7 @@ async def watchdog_disable():
     return {"message": "Watchdog disabled"}
 
 
-@router.get("/health", response_model=models.HealthResponse)
+@router.get("/health")
 async def health():
     """Health check endpoint."""
     from huggingface_hub import constants as hf_constants
