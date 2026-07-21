@@ -35,4 +35,4 @@ HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=60s \
 
 # Start the server
 ENV PORT=17493
-CMD ["sh", "-c", "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"]
+CMD ["python", "-m", "backend.main", "--host", "0.0.0.0"]
