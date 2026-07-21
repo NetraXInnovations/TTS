@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response, HTTPException
 from pydantic import BaseModel
 import io
-import scipy.io.wavfile as wavfile
+import soundfile as sf
 from ..backends.kokoro_backend import KokoroTTSBackend
 
 router = APIRouter(tags=["Stateless TTS"])
@@ -35,7 +35,7 @@ async def generate_direct(request: StatelessTTSRequest):
         
         # Write numpy array to a bytes buffer as WAV
         buffer = io.BytesIO()
-        wavfile.write(buffer, sample_rate, audio_array)
+        sf.write(buffer, audio_array, sample_rate, format='WAV')
         buffer.seek(0)
         
         # Return directly as HTTP response

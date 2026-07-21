@@ -23,13 +23,7 @@ _frontend_dir = Path(__file__).resolve().parent.parent.parent / "frontend"
 
 @router.get("/")
 async def root():
-    """Root endpoint — serves SPA index.html in Docker, JSON otherwise."""
-    from .. import __version__
-
-    index = _frontend_dir / "index.html"
-    if index.is_file():
-        return FileResponse(index, media_type="text/html")
-    return {"message": "voicebox API", "version": __version__}
+    return {"message": "running netra tts running"}
 
 
 @router.post("/shutdown")
