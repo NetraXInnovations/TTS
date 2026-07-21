@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voicebox API Tester</title>
+</head>
+<body style="font-family: Arial; padding: 50px;">
+    <h2>Voicebox API Tester</h2>
+    <input type="text" id="textInput" value="Hello, this is a test of the Voicebox API!" style="width: 300px; padding: 10px;" />
+    <button onclick="generateAudio()" style="padding: 10px;">Generate Audio</button>
+    <p id="status"></p>
+    <audio id="audioPlayer" controls style="display: none; margin-top: 20px;"></audio>
+
+    <script>
+        async function generateAudio() {
+            const status = document.getElementById('status');
+            const player = document.getElementById('audioPlayer');
+            const text = document.getElementById('textInput').value;
+            
+            status.innerText = "Generating audio... (Please wait a few seconds)";
+            player.style.display = 'none';
+
+            try {
+                const response = await fetch("https://voiceboxweb-production.up.railway.app/generate-direct", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        text: text,
+                        voice_id: "af_heart",
+                        language: "en"
+                    })
+                });
+
+                if (!response.ok) throw new Error("API returned an error.");
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                
+                player.src = url;
+                player.style.display = 'block';
+                status.innerText = "Success! Click play below:";
+            } catch (err) {
+                status.innerText = "Error: " + err.message;
+            }
+        }
+    </script>
+</body>
+</html>
