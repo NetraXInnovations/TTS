@@ -5,6 +5,7 @@ import os
 import signal
 from pathlib import Path
 
+# pyrefly: ignore [missing-import]
 import torch
 from fastapi import APIRouter
 
@@ -47,6 +48,7 @@ async def watchdog_disable():
 @router.get("/health")
 async def health():
     """Health check endpoint."""
+    # pyrefly: ignore [missing-import]
     from huggingface_hub import constants as hf_constants
     from pathlib import Path
 
@@ -59,6 +61,7 @@ async def health():
     has_xpu = False
     xpu_name = None
     try:
+        # pyrefly: ignore [missing-import]
         import intel_extension_for_pytorch as ipex  # noqa: F401 -- side-effect import enables XPU
 
         if hasattr(torch, "xpu") and torch.xpu.is_available():
@@ -73,6 +76,7 @@ async def health():
     has_directml = False
     directml_name = None
     try:
+        # pyrefly: ignore [missing-import]
         import torch_directml
 
         if torch_directml.device_count() > 0:
@@ -136,6 +140,7 @@ async def health():
         default_model_id = default_config.hf_repo_id if default_config else "Qwen/Qwen3-TTS-12Hz-1.7B-Base"
 
         try:
+            # pyrefly: ignore [missing-import]
             from huggingface_hub import scan_cache_dir
 
             cache_info = scan_cache_dir()
