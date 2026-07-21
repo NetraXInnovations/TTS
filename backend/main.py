@@ -16,7 +16,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--host",
         type=str,
-        default="127.0.0.1",
+        default="0.0.0.0" if "PORT" in os.environ else "127.0.0.1",
         help="Host to bind to (use 0.0.0.0 for remote access)",
     )
     parser.add_argument(
