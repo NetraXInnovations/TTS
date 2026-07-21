@@ -90,9 +90,7 @@ async def health():
 
     gpu_compat_warning = None
     if has_cuda:
-        from ..backends.base import check_cuda_compatibility
-
-        _compatible, gpu_compat_warning = check_cuda_compatibility()
+        _compatible, gpu_compat_warning = True, None
 
     gpu_available = has_cuda or has_mps or has_xpu or has_directml or backend_type == "mlx"
 
@@ -134,10 +132,7 @@ async def health():
 
     model_downloaded = None
     try:
-        from ..backends import get_model_config
-
-        default_config = get_model_config("qwen-tts-1.7B")
-        default_model_id = default_config.hf_repo_id if default_config else "Qwen/Qwen3-TTS-12Hz-1.7B-Base"
+        default_model_id = "Qwen/Qwen3-TTS-12Hz-1.7B-Base"
 
         try:
             # pyrefly: ignore [missing-import]

@@ -31,7 +31,7 @@ RUN mkdir -p /app/data/generations /app/data/profiles /app/data/cache
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=60s \
-    CMD curl -f http://localhost:$PORT/health || exit 1
+    CMD curl -f http://127.0.0.1:$PORT/health || exit 1
 
 # Start the server
 ENV PORT=17493
